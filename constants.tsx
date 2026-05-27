@@ -17,8 +17,7 @@ export const PERSONAL_INFO = {
   shortBio: "18-year-old BBA Business Analytics student and Growth Head Intern. Building a Harvey Specter mindset: confidence, strategic thinking, emotional control, execution, and leadership.",
   email: "dwaipayanrock2006@gmail.com",
   resumeLink: "#",
-  // Updated to the RAW url so the image actually loads in the browser
-  profileImage: "https://raw.githubusercontent.com/dwaipayanrock2006-ux/Doi-portfolio/64f5a71d2465a8aa9f48e9602c92c1c802ae9157/Dwaipayan.jpg" 
+  profileImage: "/profile.png" 
 };
 
 export const NAV_ITEMS: NavItem[] = [
@@ -106,7 +105,8 @@ export const PROJECTS: ProjectItem[] = [
     tags: ["AI Product", "EdTech", "React", "Python"],
     category: "Product",
     highlight: true,
-    imagePlaceholder: "https://picsum.photos/800/600?grayscale&blur=2"
+    imagePlaceholder: "/porobangla_preview.png",
+    link: "https://supermynd.in"
   },
   {
     title: "Myndset Growth Strategy",
@@ -115,7 +115,8 @@ export const PROJECTS: ProjectItem[] = [
     tags: ["Growth Hacking", "Analytics", "Content Strategy"],
     category: "Growth",
     highlight: true,
-    imagePlaceholder: "https://picsum.photos/800/601?grayscale&blur=2"
+    imagePlaceholder: "/myndset_preview.png",
+    link: "https://www.myndset.co.in/"
   },
   {
     title: "Finance & Analytics Insights",
@@ -123,7 +124,8 @@ export const PROJECTS: ProjectItem[] = [
     description: "A weekly personal content initiative breaking down complex financial concepts and data analytics trends for a general audience.",
     tags: ["Content Creation", "Finance", "Data Viz"],
     category: "Content",
-    highlight: false
+    highlight: false,
+    imagePlaceholder: "/finance_preview.png"
   },
   {
     title: "Market Analysis Dashboard",

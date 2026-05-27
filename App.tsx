@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 
 const App: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,22 +18,23 @@ const App: React.FC = () => {
       const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scroll = `${totalScroll / windowHeight}`;
       setScrollProgress(Number(scroll));
+      setIsScrolled(window.scrollY > 20);
     }
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-brand-bg text-brand-text font-sans">
       {/* Scroll Progress Bar */}
       <div 
-        className="fixed top-0 left-0 h-1 bg-brand-600 z-[100] transition-all duration-100 ease-out"
+        className="fixed top-0 left-0 h-1 bg-brand-accent z-[100] transition-all duration-100 ease-out"
         style={{ width: `${scrollProgress * 100}%` }}
       />
       
-      <Navbar />
-      <main>
-        <Hero />
+      <Navbar scrolled={isScrolled} />
+      <main className="flex flex-col gap-24 md:gap-40 pb-32">
+        <Hero scrolled={isScrolled} />
         <About />
         <Skills />
         <Experience />
