@@ -63,7 +63,7 @@ export default function Footer() {
         {/* Column 1: Bio */}
           <div className="lg:col-span-4">
             <h2 className="text-[22px] md:text-[26px] leading-[1.1] font-medium tracking-tight text-white max-w-[300px]">
-              Dwaipayan is an independent finance professional and growth strategist
+              Dwaipayan is a Founder, Product and Growth Strategist
             </h2>
           </div>
 
@@ -81,7 +81,7 @@ export default function Footer() {
             <h3 className="text-[13px] font-medium text-white mb-4">Follow me</h3>
             <div className="grid grid-cols-2 gap-y-4 gap-x-2">
               {/* Custom X (Twitter) Icon */}
-              <a href="#" className="flex items-center gap-2 group">
+              <a href="https://x.com/DwaipayanBiz" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
                 <svg viewBox="0 0 24 24" className="w-[14px] h-[14px] fill-[#888] group-hover:fill-white group-hover:scale-110 transition-all">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.007 3.966H5.078z" />
                 </svg>
@@ -95,7 +95,7 @@ export default function Footer() {
               </a>
 
               {/* LinkedIn */}
-              <a href="#" className="flex items-center gap-2 group">
+              <a href="https://www.linkedin.com/in/dwaipayan-pal/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 group">
                 <Linkedin size={14} className="text-[#0A66C2] fill-[#0A66C2] group-hover:scale-110 transition-transform" />
                 <span className="text-[11px] font-medium text-[#888] group-hover:text-white transition-colors">@dwaipayanpal</span>
               </a>
