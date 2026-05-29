@@ -184,7 +184,7 @@ const BioPage: React.FC = () => {
               </div>
               <div>
                 <span className="block text-[8px] font-bold uppercase tracking-widest text-white/30 mb-1">Present Work</span>
-                <span className="text-sm font-semibold text-white/80">SuperMynd ai // Porobangla AI</span>
+                <span className="text-sm font-semibold text-white/80">Supermynd AI // Myndra AI</span>
               </div>
               <div>
                 <span className="block text-[8px] font-bold uppercase tracking-widest text-white/30 mb-1">Mindset Ethos</span>
@@ -216,7 +216,7 @@ const BioPage: React.FC = () => {
             </div>
             <div className="flex flex-col gap-6">
               <p>
-                Currently, as the Growth Head Intern at <strong className="text-white font-medium">SuperMynd ai</strong>, I design strategies that drive real market traction. Simultaneously, as a builder at <strong className="text-white font-medium">Porobangla AI</strong>, I build academic intelligence tools designed to empower students.
+                Currently, driving growth strategy at <strong className="text-white font-medium">Myndra AI</strong> and building products at <strong className="text-white font-medium">Supermynd AI</strong>. I design strategies that drive real market traction and build academic intelligence tools designed to empower students.
               </p>
               <p>
                 I operate under a simple ethos: confidence backed by execution. I focus on developing a high-conviction mindset, strategic control, and deep engineering capabilities to turn ambitious ideas into functional realities.
@@ -249,6 +249,55 @@ const BioPage: React.FC = () => {
             ))}
           </div>
         </section>
+
+        {/* Education & Certifications Section */}
+        <section className="border-t border-white/10 pt-16 flex flex-col gap-10">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-brand-accent block mb-2">
+              03 // Academic & Certifications
+            </span>
+            <h2 className="font-display font-bold text-3xl text-white tracking-tight">
+              Knowledge Foundation.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Education */}
+            <div className="bg-white/5 border border-white/10 rounded-[2rem] p-8 hover:border-white/20 transition-colors flex flex-col">
+              <h3 className="text-xl font-bold text-white mb-2">BBA in Business Analytics</h3>
+              <p className="text-brand-accent text-sm font-medium mb-4">Bennett University, Greater Noida • Aug 2025 – Jun 2028</p>
+              <p className="text-white/60 text-sm mb-4">CGPA: 7.5</p>
+              <div>
+                <h4 className="text-xs uppercase tracking-widest text-white/40 mb-2">Coursework</h4>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  Business Analytics • Data Interpretation • Marketing Analytics • Financial Accounting • Marketing Management
+                </p>
+              </div>
+            </div>
+
+            {/* Certifications */}
+            <div className="bg-white/5 border border-white/10 rounded-[2rem] p-8 hover:border-white/20 transition-colors flex flex-col">
+              <h3 className="text-xl font-bold text-white mb-6">Certifications</h3>
+              <ul className="space-y-6">
+                <li className="flex items-start gap-3">
+                  <Award size={18} className="text-brand-accent flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-white font-medium text-sm">Product Strategy, Prioritization, and Discovery</p>
+                    <p className="text-white/50 text-xs mt-1">Product School, 2026</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Award size={18} className="text-brand-accent flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-white font-medium text-sm">AI Fluency for Students</p>
+                    <p className="text-white/50 text-xs mt-1">Anthropic</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
 
         {/* Signature & Social CTA */}
         <section className="border-t border-white/10 pt-16 flex flex-col items-center gap-10 text-center">
