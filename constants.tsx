@@ -17,7 +17,7 @@ export const PERSONAL_INFO = {
   shortBio: "18-year-old BBA Business Analytics student and Growth Head Intern. Building a Harvey Specter mindset: confidence, strategic thinking, emotional control, execution, and leadership.",
   email: "dwaipayanrock2006@gmail.com",
   resumeLink: "#",
-  profileImage: "/profile.png" 
+  profileImage: "https://res.cloudinary.com/dzxejgtiw/image/upload/v1776617352/53372_ctbxv6.png" 
 };
 
 export const NAV_ITEMS: NavItem[] = [
@@ -86,7 +86,7 @@ export const EXPERIENCE: ExperienceItem[] = [
   },
   {
     role: "Co-Founder",
-    company: "Porobangla AI",
+    company: "SuperMynd ai",
     duration: "Present",
     description: "Building an AI-powered academic intelligence platform for students.",
     achievements: [
@@ -99,7 +99,7 @@ export const EXPERIENCE: ExperienceItem[] = [
 
 export const PROJECTS: ProjectItem[] = [
   {
-    title: "Porobangla AI",
+    title: "SuperMynd ai",
     role: "Co-Founder",
     description: "An all-in-one AI academic suite designed to revolutionize how students prepare for CBSE, UG, PG, and competitive exams. Features include instant notes generation, smart flashcards, and adaptive mock tests.",
     tags: ["AI Product", "EdTech", "React", "Python"],

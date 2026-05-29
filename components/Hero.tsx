@@ -1,114 +1,287 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 import { PERSONAL_INFO } from '../constants';
-import Reveal from './ui/Reveal';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, TrendingUp } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Magnetic from './ui/Magnetic';
 
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Mini bar chart for the stats card ────────────────────────────────────────
+const MiniBarChart = () => {
+  const bars = [
+    { ai: 0.4, growth: 0.5 },
+    { ai: 0.55, growth: 0.65 },
+    { ai: 0.45, growth: 0.7 },
+    { ai: 0.7, growth: 0.85 },
+    { ai: 0.6, growth: 0.9 },
+    { ai: 0.8, growth: 1.0 },
+  ];
+  return (
+    <div className="flex items-end gap-1.5 h-16 mt-3">
+      {bars.map((b, i) => (
+        <div key={i} className="flex flex-col gap-1 flex-1 items-stretch">
+          <motion.div
+            className="rounded-sm"
+            style={{ backgroundColor: '#2d4a1e', height: `${b.ai * 64}px` }}
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 0.9 + i * 0.07, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          />
+          <motion.div
+            className="rounded-sm"
+            style={{ backgroundColor: '#a3c939', height: `${b.growth * 28}px` }}
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 1.0 + i * 0.07, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
 const Hero: React.FC<{ scrolled: boolean }> = ({ scrolled }) => {
-  const [scrollY, setScrollY] = useState(0);
+  const container = useRef<HTMLElement>(null);
+  const photoRef = useRef<HTMLDivElement>(null);
+
+  // Flashlight mouse tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!container.current) return;
+      const rect = container.current.getBoundingClientRect();
+      mouseX.set(e.clientX - rect.left);
+      mouseY.set(e.clientY - rect.top);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    // Set initial position to center
+    mouseX.set(window.innerWidth / 2);
+    mouseY.set(window.innerHeight / 2);
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  useEffect(() => {
+    if (!container.current) return;
+    const ctx = gsap.context(() => {
+      // Very subtle zoom parallax on the background photo
+      gsap.to(photoRef.current, {
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: container.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+    }, container);
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-brand-bg pt-32 lg:pt-0">
-      {/* Quiet Editorial Linework */}
-      <div className="absolute inset-0 pointer-events-none opacity-10">
-        <div className="h-full w-px bg-brand-900 absolute left-6 md:left-12 max-w-[1600px] mx-auto" />
-        <div className="h-full w-px bg-brand-900 absolute right-6 md:right-12 max-w-[1600px] mx-auto" />
-      </div>
+    <section
+      ref={container}
+      id="hero"
+      className="relative min-h-screen overflow-hidden flex flex-col bg-[#0a0a0a]"
+    >
+      {/* ── Base Layer: Very dark tint ── */}
+      <div className="absolute inset-0 bg-[#0a0a0a]" />
 
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-16 lg:gap-12 items-center min-h-[80vh]">
-          
-          {/* Left Column: Typography & Story */}
-          <div className="lg:col-span-7 flex flex-col items-start pt-12 lg:pt-0">
-            <Reveal>
-              <div className="mb-10 text-sm font-medium tracking-wide text-brand-500 uppercase">
-                Product & Strategy
-              </div>
-            </Reveal>
+      {/* ── Flashlight Layer ── */}
+      <motion.div 
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          WebkitMaskImage: useMotionTemplate`radial-gradient(circle 450px at ${springX}px ${springY}px, black 0%, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.2) 100%)`,
+          maskImage: useMotionTemplate`radial-gradient(circle 450px at ${springX}px ${springY}px, black 0%, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.2) 100%)`,
+        }}
+      >
+        <div ref={photoRef} className="absolute inset-0 origin-center">
+          <img
+            src="/hero.jpeg"
+            alt="Dwaipayan Pal"
+            className="w-full h-full object-cover object-center opacity-85 mix-blend-luminosity filter contrast-115 brightness-110"
+          />
+        </div>
+      </motion.div>
 
-            {/* Morphing Name to Navbar */}
-            <div className="relative mb-6 h-8 flex items-center w-full">
-              {/* Invisible placeholder to maintain spacing */}
-              <div className="opacity-0 font-medium tracking-wide text-brand-600 flex gap-1">
-                <span>Dwaipayan</span><span>Pal</span>
-              </div>
-              
-              {!scrolled && (
-                <div className="absolute left-0 top-0 flex gap-1.5 font-semibold tracking-wide text-brand-text text-lg">
-                  <motion.span 
-                    layoutId="brand-first" 
-                    transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
-                  >
-                    Dwaipayan
-                  </motion.span>
-                  <motion.span 
-                    layoutId="brand-last" 
-                    transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
-                  >
-                    Pal
-                  </motion.span>
-                  <span className="text-brand-500 font-normal ml-2 text-base">— Growth, Strategy & AI Product Specialist</span>
-                </div>
-              )}
+      {/* ── Layered dark overlays ── */}
+      {/* Bottom-to-top heavy gradient so text pops */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.4) 45%, rgba(10,10,10,0) 100%)',
+        }}
+      />
+      {/* Left-side text fade */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to right, rgba(10,10,10,0.8) 0%, transparent 60%)',
+        }}
+      />
+
+      {/* ── Morphing name (top-left, visible only before scroll) ── */}
+      <div className="relative z-20 px-8 md:px-14 pt-8">
+        <div className="h-7 flex items-center">
+          <div className="opacity-0 text-base font-medium flex gap-1">
+            <span>Dwaipayan</span><span>Pal</span>
+          </div>
+          {!scrolled && (
+            <div className="absolute left-8 md:left-14 flex items-center gap-1.5">
+              <motion.span
+                layoutId="brand-first"
+                transition={{ duration: 0.75, type: 'spring', bounce: 0.18 }}
+                className="text-sm font-semibold text-white/80 tracking-wide"
+              >
+                Dwaipayan
+              </motion.span>
+              <motion.span
+                layoutId="brand-last"
+                transition={{ duration: 0.75, type: 'spring', bounce: 0.18 }}
+                className="text-sm font-semibold text-white/80 tracking-wide"
+              >
+                Pal
+              </motion.span>
             </div>
-
-            <Reveal delay={100} className="w-full">
-              <h1 className="font-display font-medium text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.1] tracking-tight text-brand-text mb-8 max-w-3xl">
-                I build digital products with <span className="italic text-brand-500 font-serif">growth built in.</span>
-              </h1>
-            </Reveal>
-
-            <Reveal delay={200}>
-              <p className="text-lg md:text-xl text-brand-800 font-light leading-relaxed max-w-xl mb-12">
-                Combining product strategy, growth thinking, and AI execution to turn complex ideas into real market traction. Building useful products, not just shipping features.
-              </p>
-            </Reveal>
-
-            <Reveal delay={300}>
-              <div className="flex flex-wrap items-center gap-6">
-                <a href="#projects" className="group flex items-center gap-3 px-8 py-4 bg-brand-text text-brand-bg rounded-full font-medium tracking-wide text-sm hover:bg-brand-800 transition-colors">
-                  <span>View Work</span>
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                <a href="#contact" className="group flex items-center gap-2 px-6 py-4 bg-transparent text-brand-text font-medium tracking-wide text-sm hover:text-brand-500 transition-colors">
-                  <span>Let's Connect</span>
-                  <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </a>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Right Column: Editorial Image Frame */}
-          <div className="lg:col-span-5 relative mt-8 lg:mt-0 flex justify-center lg:justify-end">
-            <Reveal delay={400} direction="up">
-              <div className="relative w-full max-w-md aspect-[3/4] bg-white p-3 shadow-xl transform -rotate-1 hover:rotate-0 transition-transform duration-500 ease-out">
-                {/* Central Image */}
-                <div className="relative w-full h-full overflow-hidden bg-brand-100">
-                  <img 
-                    src={PERSONAL_INFO.profileImage} 
-                    alt="Dwaipayan Pal" 
-                    className="w-full h-full object-cover object-center scale-105 hover:scale-100 transition-transform duration-700 ease-out"
-                  />
-                </div>
-                
-                {/* Subtle Image Caption */}
-                <div className="absolute -bottom-6 right-4 text-xs font-serif italic text-brand-500">
-                  Dwaipayan Pal, 2026
-                </div>
-              </div>
-            </Reveal>
-          </div>
-
+          )}
         </div>
       </div>
+
+      {/* ── Bottom content area ── */}
+      <div className="relative z-20 mt-auto px-8 md:px-14 pb-14 md:pb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+
+        {/* Left: Headline + sub + CTA */}
+        <div className="max-w-xl">
+          {/* Eyebrow */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="text-white/40 text-xs font-semibold uppercase tracking-[0.22em] mb-4"
+          >
+            Product · Growth · AI
+          </motion.p>
+
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32, duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
+            className="font-display font-bold text-white text-[clamp(2.6rem,6vw,5rem)] leading-[1.06] tracking-[-0.02em] mb-5"
+          >
+            Building products
+            <br />
+            that{' '}
+            <span
+              className="italic font-light"
+              style={{ color: '#c8e04a' }}
+            >
+              grow.
+            </span>
+          </motion.h1>
+
+          {/* Sub */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.46, duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
+            className="text-white/50 text-sm font-light leading-relaxed mb-8 max-w-sm"
+          >
+            Strategy, growth thinking, and AI execution — turning ambitious ideas
+            into real market traction.
+          </motion.p>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <Magnetic strength={0.25}>
+              <a
+                href="#projects"
+                id="hero-view-work-btn"
+                className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm text-[#1a2a0a] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                style={{ backgroundColor: '#c8e04a' }}
+              >
+                View Work
+                <ArrowRight
+                  size={15}
+                  className="group-hover:translate-x-1 transition-transform duration-300"
+                />
+              </a>
+            </Magnetic>
+          </motion.div>
+        </div>
+
+        {/* Right: Floating stats card */}
+        <motion.div
+          initial={{ opacity: 0, y: 28, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.8, duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+          className="flex-shrink-0 w-64 bg-white rounded-2xl p-5 shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+        >
+          {/* Card header */}
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-gray-900 tracking-tight">
+                Growth
+              </span>
+              <span
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                style={{ backgroundColor: '#2d4a1e' }}
+              >
+                +142%
+              </span>
+            </div>
+            <TrendingUp size={13} className="text-gray-300" />
+          </div>
+
+          {/* Period tabs */}
+          <div className="flex gap-3 text-[10px] font-semibold mb-1">
+            <span style={{ color: '#2d4a1e' }} className="border-b border-current pb-0.5">
+              Strategy
+            </span>
+            <span className="text-gray-300">Growth</span>
+            <span className="text-gray-300">AI</span>
+          </div>
+
+          {/* Bar chart */}
+          <MiniBarChart />
+
+          {/* Caption */}
+          <p className="text-[9px] text-gray-400 mt-3 leading-snug">
+            Updates across every product cycle
+          </p>
+        </motion.div>
+
+      </div>
+
+      {/* ── Scroll indicator (bottom-center) ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 1 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5"
+      >
+        <motion.div
+          className="w-px h-8 origin-top"
+          style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+          animate={{ scaleY: [0, 1, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </motion.div>
     </section>
   );
 };
